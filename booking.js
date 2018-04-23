@@ -1,5 +1,6 @@
 const curl = require("curl");
 const jsdom = require("jsdom");
+const { exec } = require('child_process');
 
 var Venue = function (args) {
     this.name = args.name;
@@ -36,7 +37,7 @@ function getVenueList(url) {
         if (resp.statusCode == 200) {
             updateVenues(body);
             console.log(venues.length + " venues fetched sucessfully!\n\n");
-            if(doesVenueExist(cinemaName)) {
+            if (doesVenueExist(cinemaName)) {
                 alertOpening(cinemaName);
                 clearInterval(interval);
             }
@@ -47,7 +48,7 @@ function getVenueList(url) {
     });
 }
 
-function updateVenues (html) {
+function updateVenues(html) {
     const { JSDOM } = jsdom;
     const dom = new JSDOM(html);
     const $ = (require('jquery'))(dom.window);
@@ -80,13 +81,22 @@ function alertOpening(venueName) {
             "VenueName": venueName
         },
         recipients: [
-            { address: 'abc@xyz.com' }
+            { address: 'suhas.five@gmail.com' },
+            { address: 'suhas@keka.com' },
+            { address: 'shivakrishna.c@keka.com' },
+            { address: 'venkat@keka.com' }
         ]
     }).then(data => {
         console.log('Email has been sent to all the recipients!');
     }).catch(error => {
         console.log('An error occurred while sending emails.');
         console.log(error);
+    });
+
+    exec('mpg123\\mpg123 buzzer.mp3', (err, stdout, stderr) => {
+        if(err) {
+            throw err;
+        }
     });
 }
 
