@@ -11,6 +11,9 @@ var Venue = function (args) {
 const cinemaName = "Prasads";
 const ticketsFoundMessage = "Tickets in {0} are available on {1}";
 
+const SparkPost = require('sparkpost')
+const client = new SparkPost('1bf61ad112df4370a3eefbe51d93ee8124976240')
+
 const movieName = "avengers-infinity-war-3d";
 const movieCode = "ET00053419";
 const cityFullName = "hyderabad";
@@ -68,6 +71,23 @@ function doesVenueExist(venueName) {
 
 function alertOpening(venueName) {
     console.log('TICKETS ARE AVAILABLE IN ' + venueName);
+    client.transmissions.send({
+        content: {
+            from: '',
+            template_id: 'venue-alert'
+        },
+        substitution_data: {
+            "VenueName": venueName
+        },
+        recipients: [
+            { address: 'abc@xyz.com' }
+        ]
+    }).then(data => {
+        console.log('Email has been sent to all the recipients!');
+    }).catch(error => {
+        console.log('An error occurred while sending emails.');
+        console.log(error);
+    });
 }
 
 init();
